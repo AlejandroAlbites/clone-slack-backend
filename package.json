@@ -1,0 +1,25 @@
+{
+  "name": "clone-slack-backend",
+  "version": "1.0.0",
+  "description": "clone slack backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev" : "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlejandroAlbites/clone-slack-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlejandroAlbites/clone-slack-backend/issues"
+  },
+  "homepage": "https://github.com/AlejandroAlbites/clone-slack-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.4"
+  }
+}

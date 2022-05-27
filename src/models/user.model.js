@@ -1,5 +1,10 @@
 const { Schema, model, models } = require('mongoose');
 
+const emailRegex = new RegExp('^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$');
+const passwordRegex = new RegExp(
+  '(?=^.{8,}$)((?=.*d)|(?=.*W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
+);
+
 const userSchema = new Schema(
   {
     fullName: {
@@ -11,7 +16,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      // match: [RegEx, "Email invalido"],
+      match: [emailRegex, 'Invalid email'],
       validate: [
         {
           validator(value) {
@@ -26,7 +31,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      // match: [RegEx, "Email invalido"],
+      match: [passwordRegex, 'Incorrect password'],
     },
     description: {
       type: String,

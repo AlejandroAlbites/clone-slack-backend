@@ -1,9 +1,8 @@
 const { Schema, model, models } = require('mongoose');
 
-const emailRegex = new RegExp('^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$');
-const passwordRegex = new RegExp(
-  '(?=^.{8,}$)((?=.*d)|(?=.*W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
-);
+const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const passwordRegex =
+  /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
 const userSchema = new Schema(
   {
@@ -24,7 +23,7 @@ const userSchema = new Schema(
               .then((user) => !user)
               .catch(() => error);
           },
-          message: 'Ya existe un usuario con ese correo',
+          message: 'There is already a user with that email',
         },
       ],
     },

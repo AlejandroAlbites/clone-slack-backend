@@ -42,6 +42,10 @@ const userSchema = new Schema(
       default:
         'https://ceslava.s3-accelerate.amazonaws.com/2016/04/mistery-man-gravatar-wordpress-avatar-persona-misteriosa.png',
     },
+    channels: {
+      type: [{ type: Schema.Types.ObjectId, ref: 'Channel' }],
+      required: false,
+    },
   },
   {
     timestamps: true,

@@ -8,6 +8,11 @@ const channelSchema = new Schema(
       minlength: 4,
       maxlength: 20,
     },
+    users: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      required: [true, "the channel's user are required"],
+    },
   },
   {
     timestamps: true,

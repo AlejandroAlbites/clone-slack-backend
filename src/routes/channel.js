@@ -5,7 +5,7 @@ const {
   create,
   update,
   destroy,
-  //   updateAddUser,
+  updateChannel,
 } = require('../controllers/channel.controller');
 
 router.get('/', list);
@@ -13,7 +13,7 @@ router.get('/:channelId', show);
 router.post('/:userId', create);
 router.put('/:channelId/:userId', update);
 router.delete('/:channelId', destroy);
-// router.put('/:userId', updateAddUser);
+router.put('/:channelId', updateChannel);
 
 // router.route('/:channelId').get(channelController.show);
 // router.route('/').post(channelController.create);

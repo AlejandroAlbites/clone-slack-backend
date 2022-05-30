@@ -8,6 +8,10 @@ const channelSchema = new Schema(
       minlength: 4,
       maxlength: 20,
     },
+    description: {
+      type: String,
+      required: false,
+    },
     users: {
       type: [Schema.Types.ObjectId],
       ref: 'User',

@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const { connect } = require('./src/db');
+require('dotenv').config();
 const userRouter = require('./src/routes/user');
 const channelRouter = require('./src/routes/channel');
 
-const port = 8080;
+const port = process.env.PORT || 8000;
 const app = express();
 connect();
 

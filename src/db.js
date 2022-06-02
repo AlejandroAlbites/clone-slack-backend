@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 function connect() {
-  mongoose.connect('mongodb://localhost:27017/slack', {
+  mongoose.connect(process.env.MONGODB_SLACK_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

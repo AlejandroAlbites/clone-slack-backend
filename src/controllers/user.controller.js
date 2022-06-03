@@ -1,82 +1,148 @@
 const { disabled } = require('express/lib/application');
+const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
+const WorkSpace = require('../models/workSpace.model');
+const { JWTgenerator } = require('../helpers/jwt');
 
-// module.exports = {
-//list - GET - Read
+// GET - READ
 
-const listUser = async(req, res) => {
-
+const listUser = async (req, res) => {
   try {
-    const users = await User.find()
+    const users = await User.find();
     res.status(200).json({
-      ok: true, 
+      ok: true,
       message: 'Users found',
-      data: users
-    })
+      data: users,
+    });
   } catch (err) {
     res.status(404).json({
       ok: false,
-      message: 'Users not found', 
-      data: err 
+      message: 'Users not found',
+      data: err,
     });
   }
-
 };
 
 // GET ID - READ id
 
-const showUser = async(req, res) => {
-
+const showUser = async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findById(userId);
     res.status(200).json({
-      ok: true, 
-      message: 'User found', 
-      data: user
-    })
-
+      ok: true,
+      message: 'User found',
+      data: user,
+    });
   } catch (err) {
-    res.status(404).json({ 
+    res.status(404).json({
       ok: false,
-      message: 'User not found', 
-      data: err 
+      message: 'User not found',
+      data: err,
     });
   }
-
 };
 
-// POST - CREATE
+// POST - CREATE - REGISTER
 
-const createUser = async(req, res) => {
-  const data = req.body;
-
-  const newUser = {
-    ...data,
-  };
-
+const registerUser = async (req, res) => {
   try {
-    const user = await User.create(newUser);
+    const { workSpaceId, password } = req.body;
+
+    // Requiriendo el Id del workSpace para luego poder agregar el usuario creado mediante un push
+    const workSpace = await WorkSpace.findById(workSpaceId);
+    if (!workSpace) {
+      throw new Error('Invalid workspace');
+    }
+    //Encrypta la contraseña
+    const encryptPassword = await bcrypt.hash(password, 8);
+
+    // Crea el usuario
+    const user = await User.create({ ...req.body, password: encryptPassword });
+
+    // Agrega el usuario al array de users del workspace y lo guarda
+    workSpace.users.push(user);
+    await workSpace.save({ validateBeforeSave: false });
+
+    // Generar el JWT
+    const token = await JWTgenerator(user._id, user.fullName);
+
     res.status(200).json({
-      ok: true, 
+      ok: true,
       message: 'User created',
-      data: user
-    })
-
-
+      token,
+      data: user,
+    });
   } catch (err) {
-    res.status(404).json({ 
+    console.log(err);
+    res.status(404).json({
       ok: false,
-      message: 'User coult not be create', 
-      data: err 
+      message: 'User coult not be create',
+      data: err,
     });
   }
+};
 
+// POST LOGIN
+
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validacion si el usuario existe en la base de datos
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ ok: false, message: 'the email or password is not correct' });
+    }
+
+    // Validar que el password sea correcto
+    const validatePassword = await bcrypt.compare(password, user.password);
+    if (!validatePassword) {
+      return res
+        .status(400)
+        .json({ ok: false, message: 'the email or password is not correct' });
+    }
+
+    // Generar el JWT
+    const token = await JWTgenerator(user._id, user.fullName);
+
+    // Respuesta exitosa
+    res.status(200).json({
+      ok: true,
+      message: 'Login successful',
+      name: user.fullName,
+      id: user._id,
+      token,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      message:
+        'There was a problem trying to login, please contact the administrator',
+    });
+  }
+};
+
+// GET - REVALIDAR EL TOKEN
+
+const tokenRevalidate = async (req, res) => {
+  const { userId, fullName } = req;
+
+  // Generar el JWT
+  const token = await JWTgenerator(userId, fullName);
+
+  res.status(200).json({
+    ok: true,
+    message: 'token revalidated',
+    token,
+  });
 };
 
 // PUT - EDIT - UPDATE
 
-const updateUser = async(req, res) => {
+const updateUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -86,50 +152,48 @@ const updateUser = async(req, res) => {
       context: 'query',
     });
 
-    res.status(200).json({ 
+    res.status(200).json({
       ok: true,
-      message: 'User updated', 
-      data: user 
+      message: 'User updated',
+      data: user,
     });
-
   } catch (err) {
-    res.status(404).json({ 
+    res.status(404).json({
       ok: false,
-      message: 'User could not be update', 
-      data: err 
+      message: 'User could not be update',
+      data: err,
     });
   }
-
 };
 
-// DELETE DESTROY
+// DESTROY DELETE
 
-const destroyUser = async(req, res) => {
+const destroyUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
     const user = await User.findByIdAndDelete(userId);
 
-    res.status(200).json({ 
+    res.status(200).json({
       ok: true,
-      message: 'User deleted', 
-      data: user 
+      message: 'User deleted',
+      data: user,
     });
-
   } catch (err) {
-    res.status(404).json({ 
+    res.status(404).json({
       ok: false,
-      message: 'User could not be detele', 
-      data: err 
+      message: 'User could not be detele',
+      data: err,
     });
   }
-
 };
 
 module.exports = {
   listUser,
   showUser,
-  createUser,
+  registerUser,
+  loginUser,
+  tokenRevalidate,
   updateUser,
   destroyUser,
 };

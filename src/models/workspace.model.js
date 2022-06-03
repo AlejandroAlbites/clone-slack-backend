@@ -7,6 +7,12 @@ const workSpaceSchema = new Schema(
       required: [true, "the workspace's name is required"],
       minlength: 4,
       maxlength: 12,
+      unique: true,
+      default: 'Make It Real',
+    },
+    users: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
     },
   },
   {

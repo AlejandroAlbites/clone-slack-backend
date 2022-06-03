@@ -2,19 +2,20 @@ const router = require('express').Router();
 const {
   listUser,
   showUser,
-  createUser,
+  registerUser,
+  loginUser,
+  tokenRevalidate,
   updateUser,
   destroyUser,
 } = require('../controllers/user.controller');
+const { validateJWT } = require('../middlewares/validate-jwt');
 
 router.get('/', listUser);
 router.get('/:userId', showUser);
-router.post('/', createUser);
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.post('/renew', validateJWT, tokenRevalidate);
 router.put('/:userId', updateUser);
 router.delete('/:userId', destroyUser);
-// router.route('/:userId').get(userController.show);
-// router.route('/').post(userController.create);
-// router.route('/:userId').put(userController.update);
-// router.route('/:userId').delete(userController.destroy);
 
 module.exports = router;

@@ -10,8 +10,8 @@ const {
 
 router.get('/', list);
 router.get('/:channelId', show);
-router.post('/:userId', create);
-router.put('/:channelId/:userId', update);
+router.post('/', create);
+router.put('/', update);
 router.delete('/:channelId', destroy);
 router.put('/:channelId', updateChannel);
 

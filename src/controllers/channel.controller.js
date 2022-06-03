@@ -14,7 +14,6 @@ const list = async (req, res) => {
       .status(404)
       .json({ ok: false, message: 'Channels not found', data: err });
   }
-
 };
 
 // GET ID - READ id
@@ -30,21 +29,21 @@ const show = async (req, res) => {
       .status(404)
       .json({ ok: false, message: 'Channel not found', data: err });
   }
-
 };
 
 // CREATE - POST
 
 const create = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const channel = await Channel.create({ ...req.body, users: userId });
+    const { userId } = req.body;
     const user = await User.findById(userId);
-    const { _id } = channel;
-    await User.findByIdAndUpdate(userId, {
-      ...req.body,
-      channels: user.channels.concat(_id),
-    });
+    if (!user) {
+      throw new Error('Invalid user');
+    }
+    const channel = await Channel.create({ ...req.body, users: userId });
+
+    user.channels.push(channel);
+    await user.save({ validateBeforeSave: false });
     res
       .status(200)
       .json({ ok: true, message: 'Channel created', data: channel });
@@ -58,23 +57,34 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { channelId, userId } = req.params;
+    const { channelId, userId } = req.body;
 
     const channel = await Channel.findById(channelId);
-    const user = await User.findById(userId);
+    if (!channel) {
+      throw new Error('Invalid Channel');
+    }
 
-    const newChannel = await Channel.findByIdAndUpdate(channelId, {
-      ...req.body,
-      users: channel.users.concat(userId),
-    },
-    {new: true}
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('Invalid user');
+    }
+
+    const newChannel = await Channel.findByIdAndUpdate(
+      channelId,
+      {
+        ...req.body,
+        users: channel.users.concat(userId),
+      },
+      { new: true }
     );
 
-    await User.findByIdAndUpdate(userId, {
-      ...req.body,
-      channels: user.channels.concat(channelId),
-    },
-    {new: true}
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        ...req.body,
+        channels: user.channels.concat(channelId),
+      },
+      { new: true }
     );
 
     res
@@ -86,7 +96,6 @@ const update = async (req, res) => {
       .status(404)
       .json({ ok: false, message: 'Channel could not be updated', data: err });
   }
-
 };
 
 // PUT - EDIT - UPDATE
@@ -95,20 +104,20 @@ const updateChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
 
-    const channel = await Channel.findByIdAndUpdate(channelId, req.body, {new: true})
+    const channel = await Channel.findByIdAndUpdate(channelId, req.body, {
+      new: true,
+    });
 
     res
       .status(200)
       .json({ ok: true, message: 'Channel updated', data: channel });
-
   } catch (err) {
     console.log(err);
     res
       .status(404)
       .json({ ok: false, message: 'Channel could not be updated', data: err });
   }
-}
-
+};
 
 // DELETE DESTROY
 
@@ -125,7 +134,6 @@ const destroy = async (req, res) => {
       .status(404)
       .json({ ok: false, message: 'Channel could not be deleted', data: err });
   }
-
 };
 
 module.exports = {

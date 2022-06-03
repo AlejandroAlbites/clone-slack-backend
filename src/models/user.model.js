@@ -1,8 +1,8 @@
 const { Schema, model, models } = require('mongoose');
 
 const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-const passwordRegex =
-  /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+// const passwordRegex =
+//   /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
 const userSchema = new Schema(
   {
@@ -30,7 +30,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      match: [passwordRegex, 'Incorrect password'],
+      // match: [passwordRegex, 'Incorrect password'],
     },
     description: {
       type: String,
@@ -45,6 +45,12 @@ const userSchema = new Schema(
     channels: {
       type: [{ type: Schema.Types.ObjectId, ref: 'Channel' }],
       required: false,
+    },
+    workSpaceId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'WorkSpace is required'],
+      // default: '62993e9d50a9ffc238696f9e',
     },
   },
   {

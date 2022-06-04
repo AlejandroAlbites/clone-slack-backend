@@ -10,13 +10,14 @@ const validateJWT = (req, res, next) => {
     });
   }
   try {
-    const { uid, fullName } = jwt.verify(
+    const { uid, fullName, email } = jwt.verify(
       token,
       process.env.SECRET_JWT_SEED_SLACK
     );
 
     req.uid = uid;
     req.fullName = fullName;
+    req.email = email;
   } catch (err) {
     return res.status(401).json({
       ok: false,

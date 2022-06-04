@@ -65,7 +65,7 @@ const registerUser = async (req, res) => {
     await workSpace.save({ validateBeforeSave: false });
 
     // Generar el JWT
-    const token = await JWTgenerator(user._id, user.fullName);
+    const token = await JWTgenerator(user._id, user.fullName, user.email);
 
     res.status(200).json({
       ok: true,
@@ -106,7 +106,7 @@ const loginUser = async (req, res) => {
     }
 
     // Generar el JWT
-    const token = await JWTgenerator(user._id, user.fullName);
+    const token = await JWTgenerator(user._id, user.fullName, user.email);
 
     // Respuesta exitosa
     res.status(200).json({
@@ -128,15 +128,18 @@ const loginUser = async (req, res) => {
 // GET - REVALIDAR EL TOKEN
 
 const tokenRevalidate = async (req, res) => {
-  const { userId, fullName } = req;
+  const { uid, fullName, email } = req;
 
   // Generar el JWT
-  const token = await JWTgenerator(userId, fullName);
 
+  const token = await JWTgenerator(uid, fullName, email);
   res.status(200).json({
     ok: true,
     message: 'token revalidated',
     token,
+    uid,
+    fullName,
+    email,
   });
 };
 

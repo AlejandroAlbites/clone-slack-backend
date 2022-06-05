@@ -114,6 +114,8 @@ const loginUser = async (req, res) => {
       message: 'Login successful',
       name: user.fullName,
       id: user._id,
+      image: user.image,
+      description: user.description,
       token,
     });
   } catch (err) {

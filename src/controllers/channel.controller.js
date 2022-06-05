@@ -89,7 +89,13 @@ const update = async (req, res) => {
 
     res
       .status(200)
-      .json({ ok: true, message: 'Channel updated', data: newChannel });
+      .json({ 
+        ok: true, 
+        message: 'Channel updated',
+        channelId: channelId,
+        userId: userId, 
+        data: newChannel 
+      });
   } catch (err) {
     console.log(err);
     res

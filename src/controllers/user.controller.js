@@ -27,8 +27,9 @@ const listUser = async (req, res) => {
 
 const showUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await User.findById(userId);
+    const { uid } = req;
+    const user = await User.findById(uid)
+    .select('-password');
     res.status(200).json({
       ok: true,
       message: 'User found',

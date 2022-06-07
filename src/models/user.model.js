@@ -37,6 +37,20 @@ const userSchema = new Schema(
       maxlength: 150,
       default: 'Cuentanos algo sobre ti',
     },
+    telephone: {
+      type: String,
+      maxlength: 20,
+      default: '',
+    },
+    occupation: {
+      type: String,
+      maxlength: 40,
+      default: '',
+    },
+    state: {
+      type: String,
+      default: 'enabled',
+    },
     image: {
       type: String,
       default:

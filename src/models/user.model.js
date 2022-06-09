@@ -46,7 +46,7 @@ const userSchema = new Schema(
     },
     state: {
       type: String,
-      default: 'enabled',
+      default: 'disable',
     },
     image: {
       type: String,

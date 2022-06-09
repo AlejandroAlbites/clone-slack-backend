@@ -21,6 +21,19 @@ const JWTgenerator = (uid, fullName, email) => {
   });
 };
 
+const checkJWT = (token = '') => {
+  try {
+    const { uid, fullName, email } = jwt.verify(
+      token,
+      process.env.SECRET_JWT_SEED_SLACK
+    );
+    return [true, uid];
+  } catch (error) {
+    return [false, null];
+  }
+};
+
 module.exports = {
   JWTgenerator,
+  checkJWT,
 };

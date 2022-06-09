@@ -28,8 +28,7 @@ const listUser = async (req, res) => {
 const showUser = async (req, res) => {
   try {
     const { uid } = req;
-    const user = await User.findById(uid)
-    .select('-password');
+    const user = await User.findById(uid).select('-password');
     res.status(200).json({
       ok: true,
       message: 'User found',
@@ -149,22 +148,21 @@ const tokenRevalidate = async (req, res) => {
 // PUT - EDIT - UPDATE
 
 const updateUser = async (req, res) => {
-  const { userId } = req.params;
-
+  const { uid } = req;
   try {
-    const user = await User.findByIdAndUpdate(userId, req.body, {
+    delete req.body.email;
+    const user = await User.findByIdAndUpdate(uid, req.body, {
       new: true,
       runValidators: true,
       context: 'query',
     });
-
     res.status(200).json({
       ok: true,
       message: 'User updated',
       data: user,
     });
   } catch (err) {
-    res.status(404).json({
+    res.status(500).json({
       ok: false,
       message: 'User could not be update',
       data: err,

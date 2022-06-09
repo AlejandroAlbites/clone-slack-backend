@@ -17,7 +17,8 @@ router.post('/login', loginUser);
 
 router.get('/renew', validateJWT, tokenRevalidate);
 
-router.put('/:userId', updateUser);
+// router.put('/:userId', updateUser);
+router.put('/edit', validateJWT, updateUser);
 router.delete('/:userId', destroyUser);
 
 module.exports = router;

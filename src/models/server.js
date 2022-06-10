@@ -8,6 +8,7 @@ const Socket = require('./socket.model');
 const userRouter = require('../routes/user');
 const channelRouter = require('../routes/channel');
 const workSpaceRouter = require('../routes/workSpace');
+const messageRouter = require('../routes/message');
 
 class Server {
   constructor() {
@@ -26,6 +27,7 @@ class Server {
     this.app.use('/users', userRouter);
     this.app.use('/channels', channelRouter);
     this.app.use('/workSpace', workSpaceRouter);
+    this.app.use('/messages', messageRouter);
   }
 
   configSocket() {

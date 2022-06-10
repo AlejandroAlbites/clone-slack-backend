@@ -24,9 +24,14 @@ class Socket {
 
       this.io.emit('emitAllUsers', await emitAllUsers());
 
+      socket.on('emitAllUsers', async () => {
+        this.io.emit('emitAllUsers', await emitAllUsers());
+      });
+
       socket.on('disconnect', async () => {
-        console.log('client disconnected');
+        console.log('client disconnected', uid);
         await userDisconnected(uid);
+        this.io.emit('emitAllUsers', await emitAllUsers());
       });
     });
   }

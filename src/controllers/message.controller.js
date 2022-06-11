@@ -2,7 +2,7 @@ const Message = require('../models/message.model');
 
 const getChatMessage = async (req, res) => {
   const miId = req.uid;
-  const mensajesTo = req.params.de;
+  const mensajesTo = req.params.from;
 
   const last30 = await Message.find({
     $or: [

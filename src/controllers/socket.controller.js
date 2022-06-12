@@ -52,9 +52,22 @@ const saveMessage = async (payload) => {
   }
 }
 
+const getAllMessagesChannel = async (room) => {
+  try {
+    const messages = await Message.find();
+
+    const messageFilter = messages.filter(message => message.to == room);
+
+    return messageFilter;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   userConnected,
   userDisconnected,
   emitAllUsers,
   saveMessage,
+  getAllMessagesChannel
 };

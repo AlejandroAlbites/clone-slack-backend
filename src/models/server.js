@@ -4,6 +4,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
 const Socket = require('./socket.model');
+const { transporter, verify } = require('../utils/mailer');
 
 const userRouter = require('../routes/user');
 const channelRouter = require('../routes/channel');
@@ -15,6 +16,7 @@ class Server {
     this.app = express();
     this.port = process.env.PORT || 8000;
     connect();
+    verify(transporter);
     this.server = http.createServer(this.app);
     this.io = socketIo(this.server, {});
   }

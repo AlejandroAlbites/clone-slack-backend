@@ -28,10 +28,14 @@ class Socket {
 
       this.io.emit('emitAllUsers', await emitAllUsers());
 
+      socket.on('join-channel', (room) => {
+        room.forEach((item) => socket.join(item));
+      });
+
       socket.on('sendMessageUser', async (data) => {
         const message = await saveMessage(data);
-        this.io.to(data.to).emit("sendMessageUser", message);
-        this.io.to(data.from).emit("sendMessageUser", message);
+        this.io.to(data.to).emit('sendMessageUser', message);
+        this.io.to(data.from).emit('sendMessageUser', message);
       });
 
       socket.on('emitAllUsers', async () => {
@@ -41,14 +45,14 @@ class Socket {
       socket.on('sendMessageChannel', async (data) => {
         // socket.join(data.to);
         const message = await saveMessage(data);
-        this.io.to(data.to).emit("sendMessageChannel", message);
+        this.io.to(data.to).emit('sendMessageChannel', message);
       });
 
       socket.on('getMessagesChannel', async (room) => {
-        socket.join(room)
+        socket.join(room);
         const roomMessages = await getAllMessagesChannel(room);
-        socket.emit('getMessagesChannel', roomMessages)
-      })
+        socket.emit('getMessagesChannel', roomMessages);
+      });
 
       socket.on('disconnect', async () => {
         console.log('client disconnected', uid);

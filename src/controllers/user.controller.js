@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const WorkSpace = require('../models/workSpace.model');
 const { JWTgenerator } = require('../helpers/jwt');
+const { transporter, passwordChanged } = require('../utils/mailer');
 
 // GET - READ
 
@@ -170,6 +171,44 @@ const updateUser = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  const { uid } = req;
+  try {
+    const findUser = await User.findById(uid);
+    const validatePassword = await bcrypt.compare(
+      req.body.oldPassword,
+      findUser.password
+    );
+
+    if (!validatePassword) {
+      return res
+        .status(400)
+        .json({ ok: false, message: 'the password is not correct' });
+    }
+
+    const encryptPassword = await bcrypt.hash(req.body.repeatPassword, 8);
+
+    findUser.password = encryptPassword;
+    await findUser.save({ validateBeforeSave: false });
+
+    await transporter.sendMail(passwordChanged(findUser));
+
+    res.status(200).json({
+      ok: true,
+      message: 'User updated',
+      data: findUser,
+      password: encryptPassword,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      message: 'User could not be update',
+      data: err,
+    });
+    console.log(err);
+  }
+};
+
 // DESTROY DELETE
 
 const destroyUser = async (req, res) => {
@@ -200,4 +239,5 @@ module.exports = {
   tokenRevalidate,
   updateUser,
   destroyUser,
+  changePassword,
 };

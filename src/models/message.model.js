@@ -23,6 +23,10 @@ const messageSchema = new Schema(
     message: {
       type: String,
     },
+    likes: {
+      type: [Schema.Types.Object],
+      ref: 'Like',
+    },
   },
   {
     timestamps: true,

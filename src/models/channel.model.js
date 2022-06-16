@@ -6,7 +6,7 @@ const channelSchema = new Schema(
       type: String,
       required: [true, "the channel's name is required"],
       minlength: 4,
-      maxlength: 20,
+      maxlength: 30,
     },
     description: {
       type: String,
@@ -16,6 +16,10 @@ const channelSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: 'User',
       required: [true, "the channel's user are required"],
+    },
+    premium: {
+      type: Boolean,
+      default: false,
     },
   },
   {

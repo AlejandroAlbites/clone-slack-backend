@@ -62,6 +62,10 @@ const userSchema = new Schema(
       ref: 'User',
       required: [true, 'WorkSpace is required'],
     },
+    premium: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: true,

@@ -209,6 +209,31 @@ const changePassword = async (req, res) => {
   }
 };
 
+
+const changePremium = async (req, res) => {
+  const { uid } = req;
+  try {
+    const findUser = await User.findById(uid);
+    findUser.premium = true;
+    await findUser.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      ok: true,
+      message: 'User updated',
+      data: findUser,
+      premium: true,
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      message: 'User could not be update',
+      data: err,
+    });
+    console.log(err);
+  }
+};
+
+
 // DESTROY DELETE
 
 const destroyUser = async (req, res) => {
@@ -240,4 +265,5 @@ module.exports = {
   updateUser,
   destroyUser,
   changePassword,
+  changePremium,
 };

@@ -1,5 +1,6 @@
 const Message = require('../models/message.model');
 const User = require('../models/user.model');
+const Thread = require('../models/thread.model');
 
 const userConnected = async (uid) => {
   try {
@@ -40,34 +41,58 @@ const emitAllUsers = async () => {
 
 const saveMessage = async (payload) => {
   try {
-
     const message = new Message(payload);
     await message.save();
 
     return message;
-    
   } catch (error) {
     console.log(error);
     return false;
   }
-}
+};
 
 const getAllMessagesChannel = async (room) => {
   try {
     const messages = await Message.find();
 
-    const messageFilter = messages.filter(message => message.to == room);
+    const messageFilter = messages.filter((message) => message.to == room);
 
     return messageFilter;
   } catch (error) {
     console.log(error);
   }
-}
+};
+
+const saveThreadMessage = async (data) => {
+  const messageId = data.to;
+
+  try {
+    const message = await Message.findById(messageId);
+    if (!message) {
+      throw new Error('Invalid message');
+    }
+
+    const thread = new Thread(data);
+    await thread.save();
+
+    await Message.updateOne(
+      { _id: messageId },
+      {
+        $push: { thread: thread },
+      }
+    );
+
+    return thread;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 module.exports = {
   userConnected,
   userDisconnected,
   emitAllUsers,
   saveMessage,
-  getAllMessagesChannel
+  getAllMessagesChannel,
+  saveThreadMessage,
 };

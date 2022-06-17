@@ -209,7 +209,6 @@ const changePassword = async (req, res) => {
   }
 };
 
-
 const changePremium = async (req, res) => {
   const { uid } = req;
   try {
@@ -232,7 +231,6 @@ const changePremium = async (req, res) => {
     console.log(err);
   }
 };
-
 
 // DESTROY DELETE
 

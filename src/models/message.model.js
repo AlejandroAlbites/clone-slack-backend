@@ -27,6 +27,10 @@ const messageSchema = new Schema(
       type: [Schema.Types.Object],
       ref: 'Like',
     },
+    thread: {
+      type: [Schema.Types.Object],
+      ref: 'Thread',
+    },
   },
   {
     timestamps: true,

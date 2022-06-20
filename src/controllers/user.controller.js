@@ -1,9 +1,10 @@
 const { disabled } = require('express/lib/application');
+const JWT = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const WorkSpace = require('../models/workSpace.model');
 const { JWTgenerator } = require('../helpers/jwt');
-const { transporter, passwordChanged } = require('../utils/mailer');
+const { transporter, passwordChanged, forgoted } = require('../utils/mailer');
 
 // GET - READ
 
@@ -75,7 +76,6 @@ const registerUser = async (req, res) => {
       data: user,
     });
   } catch (err) {
-    console.log(err);
     res.status(404).json({
       ok: false,
       message: 'User coult not be create',
@@ -205,7 +205,64 @@ const changePassword = async (req, res) => {
       message: 'User could not be update',
       data: err,
     });
+  }
+};
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    const token = await JWTgenerator(user._id, user.fullName, user.email);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ ok: false, message: 'the email is not correct' });
+    }
+
+    await transporter.sendMail(forgoted(user, token));
+
+    res.status(200).json({
+      ok: true,
+      message: 'Email sent',
+    });
+  } catch (err) {
+    res.status(500).json({
+      ok: false,
+      message: 'Email could not be sent',
+      data: err,
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    const decoded = await JWT.verify(token, process.env.SECRET_JWT_SEED_SLACK);
+
+    const user = await User.findById(decoded.uid);
+    console.log(user);
+    const encryptPassword = await bcrypt.hash(newPassword, 8);
+
+    user.password = encryptPassword;
+    await user.save({ validateBeforeSave: false });
+
+    await transporter.sendMail(passwordChanged(user));
+
+    res.status(200).json({
+      ok: true,
+      message: 'Password updated',
+      data: user,
+    });
+  } catch (err) {
     console.log(err);
+    res.status(500).json({
+      ok: false,
+      message: 'Password could not be updated',
+      data: err,
+    });
   }
 };
 
@@ -228,7 +285,6 @@ const changePremium = async (req, res) => {
       message: 'User could not be update',
       data: err,
     });
-    console.log(err);
   }
 };
 
@@ -263,5 +319,7 @@ module.exports = {
   updateUser,
   destroyUser,
   changePassword,
+  forgotPassword,
+  resetPassword,
   changePremium,
 };

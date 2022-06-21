@@ -6,6 +6,7 @@ const {
   saveMessage,
   getAllMessagesChannel,
   saveThreadMessage,
+  getAllThreadMessages,
 } = require('../controllers/socket.controller');
 class Socket {
   constructor(io) {
@@ -58,11 +59,15 @@ class Socket {
         socket.emit('getMessagesChannel', roomMessages);
       });
 
-      // HILOS DE MENSAJES THREAD
-
       socket.on('sendMessageThread', async (data) => {
         const threadMessage = await saveThreadMessage(data);
         this.io.to(data.to).emit('sendMessageThread', threadMessage);
+      });
+
+      socket.on('getThreadMessages', async (room) => {
+        socket.join(room);
+        const roomThreadMessages = await getAllThreadMessages(room);
+        socket.emit('getThreadMessages', roomThreadMessages);
       });
 
       socket.on('disconnect', async () => {

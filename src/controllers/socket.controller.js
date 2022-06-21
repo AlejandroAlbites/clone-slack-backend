@@ -88,6 +88,18 @@ const saveThreadMessage = async (data) => {
   }
 };
 
+const getAllThreadMessages = async (room) => {
+  try {
+    const message = await Message.findById(room);
+
+    const threadMessages = message.thread;
+
+    return threadMessages;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   userConnected,
   userDisconnected,
@@ -95,4 +107,5 @@ module.exports = {
   saveMessage,
   getAllMessagesChannel,
   saveThreadMessage,
+  getAllThreadMessages,
 };

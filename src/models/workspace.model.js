@@ -11,9 +11,12 @@ const workSpaceSchema = new Schema(
       default: 'Make It Real',
     },
     users: {
-      type: [Schema.Types.ObjectId],
-      ref: 'User',
+      type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     },
+    channels: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Channels',
+    }
   },
   {
     timestamps: true,

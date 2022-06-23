@@ -58,8 +58,7 @@ const userSchema = new Schema(
       required: false,
     },
     workSpaceId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: [{ type: Schema.Types.ObjectId, ref: 'WorkSpace' }],
       required: [true, 'WorkSpace is required'],
     },
     premium: {

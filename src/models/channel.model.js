@@ -21,6 +21,11 @@ const channelSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    workSpaceId: {
+      type: Schema.Types.ObjectId, 
+      ref: 'WorkSpace',
+      required: [true, 'WorkSpace is required'],
+    },
   },
   {
     timestamps: true,

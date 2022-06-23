@@ -15,6 +15,19 @@ const userConnected = async (uid) => {
     console.log(error);
   }
 };
+const statusChanged = async (uid, req) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      uid,
+      { state: req },
+      { new: true }
+    );
+
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
 const userDisconnected = async (uid) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -108,4 +121,5 @@ module.exports = {
   getAllMessagesChannel,
   saveThreadMessage,
   getAllThreadMessages,
+  statusChanged,
 };

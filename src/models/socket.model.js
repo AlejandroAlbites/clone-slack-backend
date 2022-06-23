@@ -7,6 +7,7 @@ const {
   getAllMessagesChannel,
   saveThreadMessage,
   getAllThreadMessages,
+  statusChanged,
 } = require('../controllers/socket.controller');
 class Socket {
   constructor(io) {
@@ -29,6 +30,11 @@ class Socket {
       socket.join(uid);
 
       this.io.emit('emitAllUsers', await emitAllUsers());
+
+      socket.on('statusChange', async (req) => {
+        await statusChanged(uid, req)
+        this.io.emit('emitAllUsers', await emitAllUsers());
+      })
 
       socket.on('join-channel', (room) => {
         room.forEach((item) => socket.join(item));

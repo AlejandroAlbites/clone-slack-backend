@@ -1,5 +1,6 @@
 const Channel = require('../models/channel.model');
 const User = require('../models/user.model');
+const WorkSpace = require('../models/workSpace.model');
 
 // module.exports = {
 const list = async (req, res) => {
@@ -35,13 +36,19 @@ const show = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId, workSpaceId } = req.body;
     const user = await User.findById(userId);
     if (!user) {
       throw new Error('Invalid user');
     }
-    const channel = await Channel.create({ ...req.body, users: userId });
+    const workSpace = await WorkSpace.findById(workSpaceId);
+    if (!workSpace) {
+      throw new Error('Invalid workspace');
+    }
+    const channel = await Channel.create({ ...req.body, users: userId, workSpaceId });
 
+    workSpace.channels.push(channel);
+    await workSpace.save({ validateBeforeSave: false });
     user.channels.push(channel);
     await user.save({ validateBeforeSave: false });
     res
@@ -49,7 +56,7 @@ const create = async (req, res) => {
       .json({ ok: true, message: 'Channel created', data: channel });
   } catch (err) {
     console.log(err);
-    res.status(404).json({ ok: false, message: 'channel could not be create' });
+    res.status(404).json({ ok: false, message: 'channel could not be create', MsgError: err.message });
   }
 };
 

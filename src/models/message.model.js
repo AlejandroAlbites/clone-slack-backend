@@ -31,6 +31,10 @@ const messageSchema = new Schema(
       type: [Schema.Types.Object],
       ref: 'Thread',
     },
+    workSpaceId: {
+      type: String,
+      required: true,
+    }
   },
   {
     timestamps: true,

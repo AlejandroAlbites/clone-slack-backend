@@ -135,7 +135,7 @@ exports.passwordChanged = (user) => {
       <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 30px;font-family:'Lato',sans-serif;" align="left">
         
   <div style="color: #000000; line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 28px; line-height: 39.2px; color: #000000; font-family: Lato, sans-serif;">Hola ${user.fullName}</span></p>
+    <p style="font-size: 14px; line-height: 140%; text-align: center;"><span style="font-size: 28px; line-height: 39.2px; color: #000000; font-family: Lato, sans-serif;">Hello ${user.fullName}</span></p>
   </div>
 
       </td>
@@ -208,7 +208,7 @@ exports.passwordChanged = (user) => {
   </tbody>
   </table>
     `,
-    text: `Hola ${user.fullName} Su contraseña a sido cambiada exitosamente.`,
+    text: `Hello ${user.fullName} Su contraseña a sido cambiada exitosamente.`,
   };
 };
 

@@ -90,7 +90,7 @@ const addUser = async (req, res) => {
     console.log(err);
     res
       .status(404)
-      .json({ ok: false, message: 'Channel could not be updated', data: err });
+      .json({ ok: false, message: 'WorkSpace could not be updated', data: err });
   }
 };
 

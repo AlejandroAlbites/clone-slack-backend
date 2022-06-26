@@ -54,13 +54,10 @@ const userDisconnected = async (uid) => {
 const emitAllUsers = async () => {
   try {
     const users = await User.find();
-    if (!user) {
-      throw new Error('User not found');
-    }
 
     return users;
   } catch (error) {
-    return error.message;
+    console.log(error);
   }
 };
 

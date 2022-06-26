@@ -11,6 +11,9 @@ const { transporter, passwordChanged, forgoted } = require('../utils/mailer');
 const listUser = async (req, res) => {
   try {
     const users = await User.find();
+    if (!users) {
+      throw new Error('User not found');
+    }
     res.status(200).json({
       ok: true,
       message: 'Users found',
@@ -20,7 +23,7 @@ const listUser = async (req, res) => {
     res.status(404).json({
       ok: false,
       message: 'Users not found',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -31,6 +34,9 @@ const showUser = async (req, res) => {
   try {
     const { uid } = req;
     const user = await User.findById(uid).select('-password');
+    if (!user) {
+      throw new Error('User not found');
+    }
     res.status(200).json({
       ok: true,
       message: 'User found',
@@ -40,7 +46,7 @@ const showUser = async (req, res) => {
     res.status(404).json({
       ok: false,
       message: 'User not found',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -79,7 +85,7 @@ const registerUser = async (req, res) => {
     res.status(404).json({
       ok: false,
       message: 'User coult not be create',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -101,9 +107,7 @@ const loginUser = async (req, res) => {
     // Validar que el password sea correcto
     const validatePassword = await bcrypt.compare(password, user.password);
     if (!validatePassword) {
-      return res
-        .status(400)
-        .json({ ok: false, message: 'the email or password is not correct' });
+      throw new Error('the email or password is not correct');
     }
 
     // Generar el JWT
@@ -124,6 +128,7 @@ const loginUser = async (req, res) => {
       ok: false,
       message:
         'There was a problem trying to login, please contact the administrator',
+      data: err.message,
     });
   }
 };
@@ -166,7 +171,7 @@ const updateUser = async (req, res) => {
     res.status(500).json({
       ok: false,
       message: 'User could not be update',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -175,15 +180,16 @@ const changePassword = async (req, res) => {
   const { uid } = req;
   try {
     const findUser = await User.findById(uid);
+    if (!findUser) {
+      throw new Error('User not found');
+    }
     const validatePassword = await bcrypt.compare(
       req.body.oldPassword,
       findUser.password
     );
 
     if (!validatePassword) {
-      return res
-        .status(400)
-        .json({ ok: false, message: 'the password is not correct' });
+      throw new Error('Password is incorrect');
     }
 
     const encryptPassword = await bcrypt.hash(req.body.repeatPassword, 8);
@@ -203,7 +209,7 @@ const changePassword = async (req, res) => {
     res.status(500).json({
       ok: false,
       message: 'User could not be update',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -213,25 +219,24 @@ const forgotPassword = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
 
-    const token = await JWTgenerator(user._id, user.fullName, user.email);
-
     if (!user) {
-      return res
-        .status(400)
-        .json({ ok: false, message: 'the email is not correct' });
+      throw new Error('User not found');
     }
+
+    const token = await JWTgenerator(user._id, user.fullName, user.email);
 
     await transporter.sendMail(forgoted(user, token));
 
     res.status(200).json({
       ok: true,
       message: 'Email sent',
+      token,
     });
   } catch (err) {
     res.status(500).json({
       ok: false,
       message: 'Email could not be sent',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -243,7 +248,9 @@ const resetPassword = async (req, res) => {
     const decoded = await JWT.verify(token, process.env.SECRET_JWT_SEED_SLACK);
 
     const user = await User.findById(decoded.uid);
-    console.log(user);
+    if (!user) {
+      throw new Error('User not found');
+    }
     const encryptPassword = await bcrypt.hash(newPassword, 8);
 
     user.password = encryptPassword;
@@ -257,19 +264,21 @@ const resetPassword = async (req, res) => {
       data: user,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).json({
       ok: false,
       message: 'Password could not be updated',
-      data: err,
+      data: err.message,
     });
   }
 };
 
 const changePremium = async (req, res) => {
-  const { uid } = req;
   try {
+    const { uid } = req;
     const findUser = await User.findById(uid);
+    if (!findUser) {
+      throw new Error('User not found');
+    }
     findUser.premium = true;
     await findUser.save({ validateBeforeSave: false });
 
@@ -283,7 +292,7 @@ const changePremium = async (req, res) => {
     res.status(500).json({
       ok: false,
       message: 'User could not be update',
-      data: err,
+      data: err.message,
     });
   }
 };
@@ -295,6 +304,9 @@ const destroyUser = async (req, res) => {
 
   try {
     const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     res.status(200).json({
       ok: true,
@@ -305,7 +317,7 @@ const destroyUser = async (req, res) => {
     res.status(404).json({
       ok: false,
       message: 'User could not be detele',
-      data: err,
+      data: err.message,
     });
   }
 };

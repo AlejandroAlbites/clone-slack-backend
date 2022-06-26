@@ -23,12 +23,15 @@ const show = async (req, res) => {
   try {
     const { channelId } = req.params;
     const channel = await Channel.findById(channelId);
+    if (!channel) {
+      throw new Error('Invalid channel');
+    }
 
     res.status(200).json({ ok: true, message: 'Channel found', data: channel });
   } catch (err) {
     res
       .status(404)
-      .json({ ok: false, message: 'Channel not found', data: err });
+      .json({ ok: false, message: 'Channel not found', data: err.message });
   }
 };
 
@@ -45,7 +48,11 @@ const create = async (req, res) => {
     if (!workSpace) {
       throw new Error('Invalid workspace');
     }
-    const channel = await Channel.create({ ...req.body, users: userId, workSpaceId });
+    const channel = await Channel.create({
+      ...req.body,
+      users: userId,
+      workSpaceId,
+    });
 
     workSpace.channels.push(channel);
     await workSpace.save({ validateBeforeSave: false });
@@ -55,8 +62,13 @@ const create = async (req, res) => {
       .status(200)
       .json({ ok: true, message: 'Channel created', data: channel });
   } catch (err) {
-    console.log(err);
-    res.status(404).json({ ok: false, message: 'channel could not be create', MsgError: err.message });
+    res
+      .status(404)
+      .json({
+        ok: false,
+        message: 'channel could not be create',
+        MsgError: err.message,
+      });
   }
 };
 
@@ -102,10 +114,13 @@ const update = async (req, res) => {
       data: newChannel,
     });
   } catch (err) {
-    console.log(err);
     res
       .status(404)
-      .json({ ok: false, message: 'Channel could not be updated', data: err });
+      .json({
+        ok: false,
+        message: 'Channel could not be updated',
+        data: err.message,
+      });
   }
 };
 
@@ -119,14 +134,17 @@ const updateChannel = async (req, res) => {
       new: true,
     });
 
+    if (!channel) {
+      throw new Error('Invalid Channel');
+    }
+
     res
       .status(200)
       .json({ ok: true, message: 'Channel updated', data: channel });
   } catch (err) {
-    console.log(err);
     res
       .status(404)
-      .json({ ok: false, message: 'Channel could not be updated', data: err });
+      .json({ ok: false, message: 'Channel could not be updated', data: err.message });
   }
 };
 
@@ -136,6 +154,9 @@ const destroy = async (req, res) => {
   try {
     const { channelId } = req.params;
     const channel = await Channel.findByIdAndDelete(channelId);
+    if (!channel) {
+      throw new Error('Invalid channel');
+    }
 
     res
       .status(200)
@@ -143,7 +164,7 @@ const destroy = async (req, res) => {
   } catch (err) {
     res
       .status(404)
-      .json({ ok: false, message: 'Channel could not be deleted', data: err });
+      .json({ ok: false, message: 'Channel could not be deleted', data: err.message });
   }
 };
 

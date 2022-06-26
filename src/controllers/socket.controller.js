@@ -9,10 +9,13 @@ const userConnected = async (uid) => {
       { state: 'enable' },
       { new: true }
     );
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     return user;
   } catch (error) {
-    console.log(error);
+    return error.message;
   }
 };
 const statusChanged = async (uid, req) => {
@@ -22,10 +25,13 @@ const statusChanged = async (uid, req) => {
       { state: req },
       { new: true }
     );
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     return user;
   } catch (error) {
-    console.log(error);
+    return error.message;
   }
 };
 const userDisconnected = async (uid) => {
@@ -35,20 +41,26 @@ const userDisconnected = async (uid) => {
       { state: 'disable' },
       { new: true }
     );
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     return user;
   } catch (error) {
-    console.log(error);
+    return error.message;
   }
 };
 
 const emitAllUsers = async () => {
   try {
     const users = await User.find();
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     return users;
   } catch (error) {
-    console.log(error);
+    return error.message;
   }
 };
 
@@ -59,7 +71,6 @@ const saveMessage = async (payload) => {
 
     return message;
   } catch (error) {
-    console.log(error);
     return false;
   }
 };
@@ -97,7 +108,7 @@ const saveThreadMessage = async (data) => {
 
     return thread;
   } catch (err) {
-    console.log(err);
+    return err.message
   }
 };
 

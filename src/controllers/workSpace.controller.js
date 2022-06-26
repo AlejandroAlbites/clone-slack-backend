@@ -19,14 +19,13 @@ const listWorkSpace = async (req, res) => {
   } catch (err) {
     res
       .status(404)
-      .json({ ok: false, message: 'Work Space not found', data: err });
+      .json({ ok: false, message: 'Work Space not found', data: err.message });
   }
 };
 
 const createWorkSpace = async (req, res) => {
   try {
     const { uid } = req
-
     const user = await User.findById(uid);
 
     if (!user) {
@@ -38,7 +37,7 @@ const createWorkSpace = async (req, res) => {
     user.workSpaceId.push(workspace);
     await user.save({ validateBeforeSave: false });
 
-    res.status(201).json({ ok: true, msg: 'WorkSpace created', workspace });
+    res.status(200).json({ ok: true, msg: 'WorkSpace created', workspace });
   } catch (err) {
     res
       .status(500)
@@ -87,10 +86,9 @@ const addUser = async (req, res) => {
       data: updateWorkSpace,
     });
   } catch (err) {
-    console.log(err);
     res
       .status(404)
-      .json({ ok: false, message: 'WorkSpace could not be updated', data: err });
+      .json({ ok: false, message: 'WorkSpace could not be updated', data: err.message });
   }
 };
 

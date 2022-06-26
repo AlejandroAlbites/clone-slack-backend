@@ -219,6 +219,9 @@ exports.forgoted = (user, token) => {
       'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);',
   };
 
+  /* const token = await JWTgenerator(user._id, user.fullName, user.email);
+  console.log(token); */
+
   const emailPort = process.env.EMAIL_PORT || 3000;
 
   return {

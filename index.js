@@ -1,6 +1,8 @@
 const Server = require('./src/models/server');
-require('dotenv').config();
 
 const server = new Server();
 
 server.execute();
+server.server.listen(server.port, () => {
+  console.log(`server started in http://localhost:${server.port}`);
+});

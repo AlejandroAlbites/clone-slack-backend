@@ -218,7 +218,6 @@ exports.forgoted = (user, token) => {
     children:
       'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);',
   };
-  console.log(user);
 
   /* const token = await JWTgenerator(user._id, user.fullName, user.email);
   console.log(token); */

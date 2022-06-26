@@ -13,11 +13,12 @@ const getChatMessage = async (req, res) => {
     ],
   })
     .sort({ createdAt: 'asc' })
-    .limit(100)
+    .limit(100);
 
   res.json({
     ok: true,
     msg: last30,
+    data: 'Get messages',
   });
 };
 

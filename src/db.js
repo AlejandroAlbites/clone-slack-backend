@@ -1,20 +1,35 @@
 const mongoose = require('mongoose');
 
-function connect() {
-  mongoose.connect(process.env.MONGODB_SLACK_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+let connection;
 
-  mongoose.connection.once('open', () => {
-    console.log('Connection with mongoDB started');
-  });
+async function connect() {
+  if (connection) return;
 
-  mongoose.connection.on('error', (err) => {
-    console.log('Something went wrong!', err);
-  });
+  const uri =
+    process.env.MONGODB_SLACK_URL
 
-  return mongoose.connection;
+  connection = mongoose.connection;
+
+  connection.once('open', () =>
+    console.log('Connection established successfully')
+  );
+  connection.on('disconnected', () => console.log('Succesfully disconnected'));
+  connection.on('error', (err) => console.log('Something went wrong', err));
+
+  await mongoose.connect(uri);
 }
 
-module.exports = { connect };
+async function disconnected() {
+  if (!connection) return;
+
+  await mongoose.disconnect();
+}
+
+async function cleanup() {
+  if (!connection) return;
+  for (const collection in connection.collections) {
+    await connection.collections[collection].deleteMany({});
+  }
+}
+
+module.exports = { connect, disconnected, cleanup };

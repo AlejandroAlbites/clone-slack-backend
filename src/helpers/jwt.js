@@ -12,7 +12,6 @@ const JWTgenerator = (uid, fullName, email) => {
       },
       (err, token) => {
         if (err) {
-          console.log(err);
           reject('could not generate token');
         }
         resolve(token);

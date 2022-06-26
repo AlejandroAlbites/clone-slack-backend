@@ -4,8 +4,9 @@
   "description": "clone slack backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "test": "cross-env MONGODB_SLACK_URL=mongodb+srv://clone-slack:hCwH8JdT3xjqAUu0@cluster0.hjkr2.mongodb.net/cloneslack-test jest --detectOpenHandles",
+    "dev": "nodemon index.js",
+    "test:coverage": "npm test -- --coverage"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,10 @@
     "socket.io": "^4.5.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
-    "nodemon": "^2.0.16"
+    "jest": "^28.1.1",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
   }
 }

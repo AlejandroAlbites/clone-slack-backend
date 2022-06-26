@@ -5,6 +5,7 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const Socket = require('./socket.model');
 const { transporter, verify } = require('../utils/mailer');
+require('dotenv').config();
 
 const userRouter = require('../routes/user');
 const channelRouter = require('../routes/channel');
@@ -14,7 +15,7 @@ const messageRouter = require('../routes/message');
 class Server {
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 8000;
+    this.port = process.env.PORT;
     connect();
     verify(transporter);
     this.server = http.createServer(this.app);
@@ -40,9 +41,9 @@ class Server {
     this.middleware();
     this.configSocket();
 
-    this.server.listen(this.port, () => {
-      console.log(`server started in http://localhost:${this.port}`);
-    });
+    // this.server.listen(this.port, () => {
+    //   console.log(`server started in http://localhost:${this.port}`);
+    // });
   }
 }
 

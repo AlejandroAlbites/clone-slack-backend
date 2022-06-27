@@ -4,6 +4,7 @@
   "description": "clone slack backend",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "cross-env MONGODB_SLACK_URL=mongodb+srv://clone-slack:hCwH8JdT3xjqAUu0@cluster0.hjkr2.mongodb.net/cloneslack-test jest --detectOpenHandles",
     "dev": "nodemon index.js",
     "test:coverage": "npm test -- --coverage"

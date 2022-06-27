@@ -1,0 +1,37 @@
+{
+  "name": "clone-slack-backend",
+  "version": "1.0.0",
+  "description": "clone slack backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env MONGODB_SLACK_URL=mongodb+srv://clone-slack:hCwH8JdT3xjqAUu0@cluster0.hjkr2.mongodb.net/cloneslack-test jest --detectOpenHandles",
+    "dev": "nodemon index.js",
+    "test:coverage": "npm test -- --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlejandroAlbites/clone-slack-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlejandroAlbites/clone-slack-backend/issues"
+  },
+  "homepage": "https://github.com/AlejandroAlbites/clone-slack-backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.4",
+    "nodemailer": "^6.7.5",
+    "socket.io": "^4.5.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "jest": "^28.1.1",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
+  }
+}

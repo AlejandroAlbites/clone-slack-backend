@@ -4,6 +4,7 @@
   "description": "clone slack backend",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "test:coverage": "npm test -- --coverage"
   },

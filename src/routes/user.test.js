@@ -2,7 +2,7 @@ const request = require('supertest');
 const { connect, disconnected, cleanup } = require('../db');
 const Server = require('../models/server');
 const User = require('../models/user.model');
-const WorkSpace = require('../models/workSpace.model');
+const WorkSpace = require('../models/workspace.model');
 const jwt = require('jsonwebtoken');
 
 const server = new Server();
@@ -16,7 +16,7 @@ describe('User', () => {
     await connect();
     await server.execute();
   }, 100000);
-  
+
   beforeEach(async () => {
     await cleanup();
 

@@ -2,7 +2,7 @@ const { disabled } = require('express/lib/application');
 const JWT = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
-const WorkSpace = require('../models/workSpace.model');
+const WorkSpace = require('../models/workspace.model');
 const { JWTgenerator } = require('../helpers/jwt');
 const { transporter, passwordChanged, forgoted } = require('../utils/mailer');
 

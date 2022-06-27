@@ -1,6 +1,6 @@
 const Channel = require('../models/channel.model');
 const User = require('../models/user.model');
-const WorkSpace = require('../models/workSpace.model');
+const WorkSpace = require('../models/workspace.model');
 
 // module.exports = {
 const list = async (req, res) => {
@@ -62,13 +62,11 @@ const create = async (req, res) => {
       .status(200)
       .json({ ok: true, message: 'Channel created', data: channel });
   } catch (err) {
-    res
-      .status(404)
-      .json({
-        ok: false,
-        message: 'channel could not be create',
-        MsgError: err.message,
-      });
+    res.status(404).json({
+      ok: false,
+      message: 'channel could not be create',
+      MsgError: err.message,
+    });
   }
 };
 
@@ -114,13 +112,11 @@ const update = async (req, res) => {
       data: newChannel,
     });
   } catch (err) {
-    res
-      .status(404)
-      .json({
-        ok: false,
-        message: 'Channel could not be updated',
-        data: err.message,
-      });
+    res.status(404).json({
+      ok: false,
+      message: 'Channel could not be updated',
+      data: err.message,
+    });
   }
 };
 
@@ -144,7 +140,11 @@ const updateChannel = async (req, res) => {
   } catch (err) {
     res
       .status(404)
-      .json({ ok: false, message: 'Channel could not be updated', data: err.message });
+      .json({
+        ok: false,
+        message: 'Channel could not be updated',
+        data: err.message,
+      });
   }
 };
 
@@ -164,7 +164,11 @@ const destroy = async (req, res) => {
   } catch (err) {
     res
       .status(404)
-      .json({ ok: false, message: 'Channel could not be deleted', data: err.message });
+      .json({
+        ok: false,
+        message: 'Channel could not be deleted',
+        data: err.message,
+      });
   }
 };
 

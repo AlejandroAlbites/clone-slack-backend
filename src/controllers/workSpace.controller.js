@@ -1,14 +1,14 @@
-const WorkSpace = require('../models/workSpace.model');
+const WorkSpace = require('../models/workspace.model');
 const User = require('../models/user.model');
 
 const listWorkSpace = async (req, res) => {
   try {
-    const { uid } = req
+    const { uid } = req;
 
     const user = await User.findById(uid);
 
     if (!user) {
-      throw new Error('User not found')
+      throw new Error('User not found');
     }
 
     const workSpace = await WorkSpace.find();
@@ -25,11 +25,11 @@ const listWorkSpace = async (req, res) => {
 
 const createWorkSpace = async (req, res) => {
   try {
-    const { uid } = req
+    const { uid } = req;
     const user = await User.findById(uid);
 
     if (!user) {
-      throw new Error('User not found')
+      throw new Error('User not found');
     }
 
     const workspace = await WorkSpace.create({ ...req.body, users: user._id });
@@ -41,13 +41,17 @@ const createWorkSpace = async (req, res) => {
   } catch (err) {
     res
       .status(500)
-      .json({ ok: false, msg: 'Error, workSpace could not be create', msgError: err.message });
+      .json({
+        ok: false,
+        msg: 'Error, workSpace could not be create',
+        msgError: err.message,
+      });
   }
 };
 
 const addUser = async (req, res) => {
   try {
-    const { uid } = req
+    const { uid } = req;
     const { workspaceId } = req.body;
 
     const workspace = await WorkSpace.findById(workspaceId);
@@ -88,7 +92,11 @@ const addUser = async (req, res) => {
   } catch (err) {
     res
       .status(404)
-      .json({ ok: false, message: 'WorkSpace could not be updated', data: err.message });
+      .json({
+        ok: false,
+        message: 'WorkSpace could not be updated',
+        data: err.message,
+      });
   }
 };
 

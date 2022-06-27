@@ -2,7 +2,7 @@ const request = require('supertest');
 const { connect, disconnected, cleanup } = require('../db');
 const Server = require('../models/server');
 const User = require('../models/user.model');
-const WorkSpace = require('../models/workSpace.model');
+const WorkSpace = require('../models/workspace.model');
 const Channel = require('../models/channel.model');
 const jwt = require('jsonwebtoken');
 
@@ -150,7 +150,9 @@ describe('Channels', () => {
       workSpaceId: workspace._id,
       name: 'channel test',
     };
-    const res = await request(server.app).put(`/channels/${channel._id}`).send(data);
+    const res = await request(server.app)
+      .put(`/channels/${channel._id}`)
+      .send(data);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toMatch(/Channel updated/i);
@@ -162,7 +164,9 @@ describe('Channels', () => {
       workSpaceId: workspace._id,
       name: 'channel test',
     };
-    const res = await request(server.app).put('/channels/62b7d1de1fcc8590ca75cbf2').send(data);
+    const res = await request(server.app)
+      .put('/channels/62b7d1de1fcc8590ca75cbf2')
+      .send(data);
 
     expect(res.statusCode).toBe(404);
     expect(res.body.data).toMatch(/Invalid Channel/i);
@@ -176,7 +180,9 @@ describe('Channels', () => {
   });
 
   it('should not delete the channel because its id is invalid', async () => {
-    const res = await request(server.app).delete('/channels/62b7d1de1fcc8590ca75cbf2');
+    const res = await request(server.app).delete(
+      '/channels/62b7d1de1fcc8590ca75cbf2'
+    );
 
     expect(res.statusCode).toBe(404);
     expect(res.body.data).toMatch(/Invalid channel/i);

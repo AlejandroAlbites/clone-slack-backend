@@ -1,13 +1,12 @@
 const nodemailer = require('nodemailer');
-const { JWTgenerator } = require('../helpers/jwt');
 
 exports.transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,
   auth: {
-    user: 'cloneslack22@gmail.com',
-    pass: 'zakpgzhkjigqlfqn',
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASSWORD,
   },
 });
 

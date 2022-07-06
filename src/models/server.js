@@ -5,7 +5,6 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const Socket = require('./socket.model');
 const { transporter, verify } = require('../utils/mailer');
-require('dotenv').config();
 
 const userRouter = require('../routes/user');
 const channelRouter = require('../routes/channel');
@@ -17,14 +16,14 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
     connect();
-    verify(transporter);
     this.server = http.createServer(this.app);
     this.io = socketIo(this.server, {});
   }
-
+  
   middleware() {
     this.app.use(cors());
     this.app.use(express.json());
+    verify(transporter);
 
     // End Points
     this.app.use('/users', userRouter);
